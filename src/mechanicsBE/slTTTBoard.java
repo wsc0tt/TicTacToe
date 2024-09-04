@@ -8,6 +8,10 @@ public class slTTTBoard {
             {'-','-','-'}
     };
 
+    final int ROWS = board.length;
+    final int COLS = board[0].length;
+    public int moveCount = 0;
+
     // method to prompt user
     public void prompt() {
         System.out.print("Enter row col numbers seperated by exactly one space (or type q to quit): ");
@@ -39,22 +43,81 @@ public class slTTTBoard {
     }
 
     // Mark the board
-    public void setBoard() {
-
+    public void setBoard(String move) {
+        moveCount++;
+        char team;
+        int i = move.charAt(0) - '0';
+        int j = move.charAt(2) - '0';
+        if (moveCount % 2 != 0) {
+            team = 'x';
+        }
+        else {
+            team = 'o';
+        }
+        board[i][j] = team;
     }
 
-    // method to check board for 3 in a row or full board
-    public void checkBoard(int move){
-        switch (move) {
-            case(0):
+    // method to inquire if a cell is open
+    public boolean isCellOpen(String move){
+        int i = move.charAt(0) - '0';
+        int j = move.charAt(2) - '0';
+        if (board[i][j] == '-') {
+            return true;
+        }
+        else {
+            return false;
         }
     }
+
+    public boolean check3() {
+        // check rows
+        for (int i = 0; i < ROWS; i++) {
+            if (board[i][0] != '-' &&
+                board[i][0] == board[i][1] &&
+                board[i][0] == board[i][2]) {
+                return true;
+            }
+        }
+        // check cols
+        for (int j = 0; j < COLS; j++) {
+            if (board[0][j] != '-' &&
+                    board[0][j] == board[1][j] &&
+                    board[0][j] == board[2][j]) {
+                return true;
+            }
+        }
+        // check first diagonal
+        if (board[0][0] != '-' &&
+            board[0][0] == board[1][1] &&
+            board[0][0] == board[2][2]) {
+            return true;
+        }
+        // check second diagonal
+        if (board[0][2] != '-' &&
+            board[0][2] == board[1][1] &&
+            board[0][2] == board[2][0]) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean checkFull() {
+        for (int i = 0; i < ROWS; i++) {
+            for (int j = 0; j < COLS; j++) {
+                if (board[i][j] == '-'){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
 
     // method to print the board
     public void printBoard() {
         System.out.println();
-        for (int i = 0; i < board.length; i++) {
-            for (int j = 0; j < board[i].length; j++) {
+        for (int i = 0; i < ROWS; i++) {
+            for (int j = 0; j < COLS; j++) {
                 System.out.print(board[i][j] + "  ");
             }
             System.out.println();
@@ -65,15 +128,32 @@ public class slTTTBoard {
     // method to start a new tic-tac-toe game
     public void play() {
         String move = "";               // init empty string to store the current move
-        while (!move.equals("quit")) {  // while the move is not equal to quit loop this
+        while (!move.equals("quit")) {  // while the move is not equal to quit and game is not over, loop this
             prompt();                   // ask the user for move
             move = getMove();           // save the move
             if (!move.equals("error") && !move.equals("quit")) {    // if the move is not an error or quit
-                //checkBoard(move);                                 //check the board then mark the board
-                //setBoard();
+                if (isCellOpen(move)){
+                    setBoard(move);
+                }
+                else {
+                    System.out.println("cell has already been marked - try a different cell");
+                }
                 printBoard();
             }
+
+
+            if (check3()) {
+                System.out.println("3 in a row!!!");
+                System.out.println("*** GAME OVER ***");
+                break;
+            }
+            if (checkFull()) {
+                System.out.println("The board is full!!!");
+                System.out.println("*** GAME OVER ***");
+                break;
+            }
         }
+
 
     }
 }

@@ -52,7 +52,7 @@ public class slTTTBoard {
     public void setBoard(String move) {
         moveCount++;
         char team;
-        int i = move.charAt(0) - '0';
+        int i = move.charAt(0) - '0';   // subtract the character 0 to offset char to correct int values
         int j = move.charAt(2) - '0';
         if (moveCount % 2 != 0) {
             team = 'x';

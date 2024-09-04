@@ -1,3 +1,9 @@
+/**
+ * @author William Scott
+ * @project Assignment 1 - Tic Tac Toe
+ * @course CSC 133 - Section 9
+ */
+
 package mechanicsBE;
 import java.util.*;
 
@@ -18,7 +24,7 @@ public class slTTTBoard {
     }
 
 
-    // Get user input for next move or quit
+    // Get user input for next move or quit; input validation
     public String getMove() {
         Scanner input = new Scanner(System.in);
         String line = input.nextLine();
@@ -42,7 +48,7 @@ public class slTTTBoard {
         }
     }
 
-    // Mark the board
+    // Mark the board, alternating x and o
     public void setBoard(String move) {
         moveCount++;
         char team;
@@ -69,6 +75,7 @@ public class slTTTBoard {
         }
     }
 
+    // method to check for 3 in a row
     public boolean check3() {
         // check rows
         for (int i = 0; i < ROWS; i++) {
@@ -101,10 +108,11 @@ public class slTTTBoard {
         return false;
     }
 
+    // check if the board is completely full
     public boolean checkFull() {
         for (int i = 0; i < ROWS; i++) {
             for (int j = 0; j < COLS; j++) {
-                if (board[i][j] == '-'){
+                if (board[i][j] == '-'){    // if any spot of the board = '-' return false
                     return false;
                 }
             }
@@ -113,7 +121,7 @@ public class slTTTBoard {
     }
 
 
-    // method to print the board
+    // method to print and format the board
     public void printBoard() {
         System.out.println();
         for (int i = 0; i < ROWS; i++) {
@@ -128,12 +136,12 @@ public class slTTTBoard {
     // method to start a new tic-tac-toe game
     public void play() {
         String move = "";               // init empty string to store the current move
-        while (!move.equals("quit")) {  // while the move is not equal to quit and game is not over, loop this
+        while (!move.equals("quit")) {  // while the move is not equal to quit; loop this
             prompt();                   // ask the user for move
             move = getMove();           // save the move
             if (!move.equals("error") && !move.equals("quit")) {    // if the move is not an error or quit
                 if (isCellOpen(move)){
-                    setBoard(move);
+                    setBoard(move);     // if the cell is open, mark the board
                 }
                 else {
                     System.out.println("cell has already been marked - try a different cell");
@@ -141,12 +149,13 @@ public class slTTTBoard {
                 printBoard();
             }
 
-
+            // if there is a 3 in a row, end game
             if (check3()) {
                 System.out.println("3 in a row!!!");
                 System.out.println("*** GAME OVER ***");
                 break;
             }
+            // if there is a full board, end game
             if (checkFull()) {
                 System.out.println("The board is full!!!");
                 System.out.println("*** GAME OVER ***");

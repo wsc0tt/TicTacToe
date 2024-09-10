@@ -8,21 +8,23 @@ package mechanicsBE;
 import java.util.*;
 
 public class slTTTBoard {
+
+    final char defChar = '-';
+    private int moveCount = 0;
+
     public char[][] board = {
-            {'-','-','-'},
-            {'-','-','-'},
-            {'-','-','-'}
+            {defChar, defChar, defChar},
+            {defChar, defChar, defChar},
+            {defChar, defChar, defChar}
     };
 
     final int ROWS = board.length;
     final int COLS = board[0].length;
-    public int moveCount = 0;
 
     // method to prompt user
     public void prompt() {
         System.out.print("Enter row col numbers seperated by exactly one space (or type q to quit): ");
     }
-
 
     // Get user input for next move or quit; input validation
     public String getMove() {
@@ -47,27 +49,26 @@ public class slTTTBoard {
                 return "error";
         }
     }
-
     // Mark the board, alternating x and o
     public void setBoard(String move) {
         moveCount++;
         char team;
-        int i = move.charAt(0) - '0';   // subtract the character 0 to offset char to correct int values
-        int j = move.charAt(2) - '0';
+        int row = move.charAt(0) - '0';   // subtract the character 0 to offset char to correct int values
+        int col = move.charAt(2) - '0';
         if (moveCount % 2 != 0) {
             team = 'x';
         }
         else {
             team = 'o';
         }
-        board[i][j] = team;
+        board[row][col] = team;
     }
 
     // method to inquire if a cell is open
     public boolean isCellOpen(String move){
-        int i = move.charAt(0) - '0';
-        int j = move.charAt(2) - '0';
-        if (board[i][j] == '-') {
+        int row = move.charAt(0) - '0';
+        int col = move.charAt(2) - '0';
+        if (board[row][col] == defChar) {
             return true;
         }
         else {
@@ -76,31 +77,31 @@ public class slTTTBoard {
     }
 
     // method to check for 3 in a row
-    public boolean check3() {
+    public boolean check3InARow() {
         // check rows
-        for (int i = 0; i < ROWS; i++) {
-            if (board[i][0] != '-' &&
-                board[i][0] == board[i][1] &&
-                board[i][0] == board[i][2]) {
+        for (int row = 0; row < ROWS; row++) {
+            if (board[row][0] != defChar &&
+                board[row][0] == board[row][1] &&
+                board[row][0] == board[row][2]) {
                 return true;
             }
         }
         // check cols
-        for (int j = 0; j < COLS; j++) {
-            if (board[0][j] != '-' &&
-                    board[0][j] == board[1][j] &&
-                    board[0][j] == board[2][j]) {
+        for (int col = 0; col < COLS; col++) {
+            if (board[0][col] != defChar &&
+                    board[0][col] == board[1][col] &&
+                    board[0][col] == board[2][col]) {
                 return true;
             }
         }
         // check first diagonal
-        if (board[0][0] != '-' &&
+        if (board[0][0] != defChar &&
             board[0][0] == board[1][1] &&
             board[0][0] == board[2][2]) {
             return true;
         }
         // check second diagonal
-        if (board[0][2] != '-' &&
+        if (board[0][2] != defChar &&
             board[0][2] == board[1][1] &&
             board[0][2] == board[2][0]) {
             return true;
@@ -110,9 +111,9 @@ public class slTTTBoard {
 
     // check if the board is completely full
     public boolean checkFull() {
-        for (int i = 0; i < ROWS; i++) {
-            for (int j = 0; j < COLS; j++) {
-                if (board[i][j] == '-'){    // if any spot of the board = '-' return false
+        for (int row = 0; row < ROWS; row++) {
+            for (int col = 0; col < COLS; col++) {
+                if (board[row][col] == defChar){    // if any spot of the board = default char, return false
                     return false;
                 }
             }
@@ -120,13 +121,12 @@ public class slTTTBoard {
         return true;
     }
 
-
     // method to print and format the board
     public void printBoard() {
         System.out.println();
-        for (int i = 0; i < ROWS; i++) {
-            for (int j = 0; j < COLS; j++) {
-                System.out.print(board[i][j] + "  ");
+        for (int row = 0; row < ROWS; row++) {
+            for (int col = 0; col < COLS; col++) {
+                System.out.print(board[row][col] + "  ");
             }
             System.out.println();
         }
@@ -150,7 +150,7 @@ public class slTTTBoard {
             }
 
             // if there is a 3 in a row, end game
-            if (check3()) {
+            if (check3InARow()) {
                 System.out.println("3 in a row!!!");
                 System.out.println("*** GAME OVER ***");
                 break;
@@ -162,7 +162,5 @@ public class slTTTBoard {
                 break;
             }
         }
-
-
     }
 }

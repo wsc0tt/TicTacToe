@@ -10,7 +10,9 @@ import java.util.*;
 public class slTTTBoard {
 
     final char defChar = '-';
-    private int moveCount = 0;
+    private int moveCount = 0;  // keep track of the number of moves
+
+    // 3x3 array to represent the board
 
     public char[][] board = {
             {defChar, defChar, defChar},

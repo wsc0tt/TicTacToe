@@ -3,12 +3,14 @@ import mechanicsBE.slTTTBoard;
 
 public class gameFE {
 
-    public gameFE (slTTTBoard board) {
+    slTTTBoard brd;
 
+    public gameFE (slTTTBoard brd) {
+        this.brd = brd;
     }
 
     public void startGame() {
-        System.out.println("new game started");
+        System.out.println("Hello from the FE");
+        brd.printBoard();
     }
-
 }

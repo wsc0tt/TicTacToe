@@ -6,22 +6,28 @@
 
 package mechanicsBE;
 import java.util.*;
+import static csc133.spot.*;
 
 public class slTTTBoard {
 
-    final char defChar = '-';
     private int moveCount = 0;  // keep track of the number of moves
-
+    private char lastMove = defChar;  // keep track of the last move
+    
     // 3x3 array to represent the board
-
     public char[][] board = {
             {defChar, defChar, defChar},
             {defChar, defChar, defChar},
             {defChar, defChar, defChar}
     };
-
-    final int ROWS = board.length;
-    final int COLS = board[0].length;
+    
+    private ArrayList<Integer> openCellsArray;
+    
+    public slTTTBoard() {
+        openCellsArray = new ArrayList<>();
+        for (int i = 0; i < 9; i++) {
+            openCellsArray.add(i);
+        }
+    }
 
     // method to prompt user
     public void prompt() {
@@ -52,18 +58,59 @@ public class slTTTBoard {
         }
     }
     // Mark the board, alternating x and o
-    public void setBoard(String move) {
+    public void setBoard(String move, char team) {
         moveCount++;
-        char team;
         int row = move.charAt(0) - '0';   // subtract the character 0 to offset char to correct int values
         int col = move.charAt(2) - '0';
-        if (moveCount % 2 != 0) {
-            team = 'x';
+        board[row][col] = team;         // set the board to the team char
+        updateBoardArray(move);
+    }
+    
+    public void updateBoardArray(String move) {
+        int cell = switch (move) {
+            case "0 0" -> 0;
+            case "0 1" -> 1;
+            case "0 2" -> 2;
+            case "1 0" -> 3;
+            case "1 1" -> 4;
+            case "1 2" -> 5;
+            case "2 0" -> 6;
+            case "2 1" -> 7;
+            case "2 2" -> 8;
+            default -> 9;
+        };
+        openCellsArray.remove(Integer.valueOf(cell));
+    }
+
+    public void resetBoard() {
+        for (int i = 0; i < ROWS; i++) {
+            for (int j = 0; j < COLS; j++) {
+                board[i][j] = defChar;
+            }
+        }
+        openCellsArray.clear();
+        for (int i = 0; i < 9; i++) {
+            openCellsArray.add(i);
+        }
+        moveCount = 0;
+    }
+
+    public void playRandom() {
+        Random rand = new Random();
+        int row = rand.nextInt(3);
+        int col = rand.nextInt(3);
+        String move = row + " " + col;
+        if (isCellOpen(move)){
+            setBoard(move, MACHINE_CHAR);
+            lastMove = MACHINE_CHAR;
         }
         else {
-            team = 'o';
+            playRandom();
         }
-        board[row][col] = team;
+    }
+
+    public void playSpline() {
+
     }
 
     // method to inquire if a cell is open
@@ -136,14 +183,15 @@ public class slTTTBoard {
     }
 
     // method to start a new tic-tac-toe game
-    public void play() {
+    public int play() {
         String move = "";               // init empty string to store the current move
         while (!move.equals("quit")) {  // while the move is not equal to quit; loop this
             prompt();                   // ask the user for move
             move = getMove();           // save the move
             if (!move.equals("error") && !move.equals("quit")) {    // if the move is not an error or quit
                 if (isCellOpen(move)){
-                    setBoard(move);     // if the cell is open, mark the board
+                    setBoard(move, PLAYER_CHAR);     // if the cell is open, mark the board
+                    lastMove = PLAYER_CHAR;          // set the last move to the player
                 }
                 else {
                     System.out.println("cell has already been marked - try a different cell");
@@ -153,15 +201,21 @@ public class slTTTBoard {
 
             // if there is a 3 in a row, end game
             if (check3InARow()) {
-                System.out.println("3 in a row!!!");
-                System.out.println("*** GAME OVER ***");
-                break;
+                return PLAYER_WIN;
             }
             // if there is a full board, end game
-            if (checkFull()) {
-                System.out.println("The board is full!!!");
-                System.out.println("*** GAME OVER ***");
-                break;
+            else if (checkFull()) {
+                return DRAW;
+            }
+            else {
+                playRandom();   // machine plays a random move
+                printBoard();
+                if (check3InARow()) {
+                    return MACHINE_WIN;
+                }
+                else if (checkFull()) {
+                    return DRAW;
+                }
             }
         }
     }

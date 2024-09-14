@@ -109,6 +109,44 @@ public class slTTTBoard {
         }
     }
 
+    public void playSpline() {
+        if (moveCount == 0) {
+            setBoard("0 0", MACHINE_CHAR);
+        }
+        else if (moveCount == 1) {
+            if (board[1][1] == PLAYER_CHAR) {
+                setBoard("0 0", MACHINE_CHAR);
+            }
+            else {
+                setBoard("1 1", MACHINE_CHAR);
+            }
+        }
+        else if (moveCount == 2) {
+            if (board[0][0] == PLAYER_CHAR) {
+                setBoard("2 2", MACHINE_CHAR);
+            }
+            else if (board[0][2] == PLAYER_CHAR) {
+                setBoard("2 0", MACHINE_CHAR);
+            }
+            else if (board[2][0] == PLAYER_CHAR) {
+                setBoard("0 2", MACHINE_CHAR);
+            }
+            else if (board[2][2] == PLAYER_CHAR) {
+                setBoard("0 0", MACHINE_CHAR);
+            }
+            else {
+                setBoard("0 1", MACHINE_CHAR);
+            }
+        }
+        else {
+            splineWinningMove();
+            splineBlockingMove();
+            splineCenterMove();
+            splineCornerMove();
+            splineSideMove();
+        }
+    }
+
     // 1. check for winning move
     public void splineWinningMove() {
         for (int row = 0; row < ROWS; row++) {  // check rows
@@ -190,10 +228,95 @@ public class slTTTBoard {
     }
 
     // 2. check for blocking move
-
+    public void splineBlockingMove() {
+        for (int row = 0; row < ROWS; row++) {  // check rows
+            if (board[row][0] == PLAYER_CHAR &&
+                    board[row][1] == PLAYER_CHAR &&
+                    board[row][2] == defChar) {
+                setBoard(row + " 2", MACHINE_CHAR);
+                return;
+            } else if (board[row][0] == PLAYER_CHAR &&
+                    board[row][1] == defChar &&
+                    board[row][2] == PLAYER_CHAR) {
+                setBoard(row + " 1", MACHINE_CHAR);
+                return;
+            } else if (board[row][0] == defChar &&
+                    board[row][1] == PLAYER_CHAR &&
+                    board[row][2] == PLAYER_CHAR) {
+                setBoard(row + " 0", MACHINE_CHAR);
+                return;
+            }
+        }
+        for (int col = 0; col < COLS; col++) {  // check cols
+            if (board[0][col] == PLAYER_CHAR &&
+                    board[1][col] == PLAYER_CHAR &&
+                    board[2][col] == defChar) {
+                setBoard("2 " + col, MACHINE_CHAR);
+                return;
+            } else if (board[0][col] == PLAYER_CHAR &&
+                    board[1][col] == defChar &&
+                    board[2][col] == PLAYER_CHAR) {
+                setBoard("1 " + col, MACHINE_CHAR);
+                return;
+            } else if (board[0][col] == defChar &&
+                    board[1][col] == PLAYER_CHAR &&
+                    board[2][col] == PLAYER_CHAR) {
+                setBoard("0 " + col, MACHINE_CHAR);
+                return;
+            }
+        }
+        if (board[0][0] == PLAYER_CHAR &&  // check first diagonal
+                board[1][1] == PLAYER_CHAR &&
+                board[2][2] == defChar) {
+            setBoard("2 2", MACHINE_CHAR);
+            return;
+        } else if (board[0][0] == PLAYER_CHAR &&
+                board[1][1] == defChar &&
+                board[2][2] == PLAYER_CHAR) {
+            setBoard("1 1", MACHINE_CHAR);
+            return;
+        } else if (board[0][0] == defChar &&
+                board[1][1] == PLAYER_CHAR &&
+                board[2][2] == PLAYER_CHAR) {
+            setBoard("0 0", MACHINE_CHAR);
+        }
+    }
     // 3. check for center move
+    public void splineCenterMove() {
+        if (board[1][1] == defChar) {
+            setBoard("1 1", MACHINE_CHAR);
+        }
+    }
     // 4. check for corner move
+    public void splineCornerMove() {
+        if (board[0][0] == defChar) {
+            setBoard("0 0", MACHINE_CHAR);
+        }
+        else if (board[0][2] == defChar) {
+            setBoard("0 2", MACHINE_CHAR);
+        }
+        else if (board[2][0] == defChar) {
+            setBoard("2 0", MACHINE_CHAR);
+        }
+        else if (board[2][2] == defChar) {
+            setBoard("2 2", MACHINE_CHAR);
+        }
+    }
     // 5. check for side move
+    public void splineSideMove() {
+        if (board[0][1] == defChar) {
+            setBoard("0 1", MACHINE_CHAR);
+        }
+        else if (board[1][0] == defChar) {
+            setBoard("1 0", MACHINE_CHAR);
+        }
+        else if (board[1][2] == defChar) {
+            setBoard("1 2", MACHINE_CHAR);
+        }
+        else if (board[2][1] == defChar) {
+            setBoard("2 1", MACHINE_CHAR);
+        }
+    }
 
     // method to inquire if a cell is open
     public boolean isCellOpen(String move){
@@ -300,5 +423,6 @@ public class slTTTBoard {
                 }
             }
         }
+        return GAME_QUIT;
     }
 }

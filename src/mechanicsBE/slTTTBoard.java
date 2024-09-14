@@ -109,9 +109,91 @@ public class slTTTBoard {
         }
     }
 
-    public void playSpline() {
-
+    // 1. check for winning move
+    public void splineWinningMove() {
+        for (int row = 0; row < ROWS; row++) {  // check rows
+            if (board[row][0] == MACHINE_CHAR &&
+                board[row][1] == MACHINE_CHAR &&
+                board[row][2] == defChar) {
+                setBoard(row + " 2", MACHINE_CHAR);
+                return;
+            }
+            else if (board[row][0] == MACHINE_CHAR &&
+                    board[row][1] == defChar &&
+                    board[row][2] == MACHINE_CHAR) {
+                setBoard(row + " 1", MACHINE_CHAR);
+                return;
+            }
+            else if (board[row][0] == defChar &&
+                    board[row][1] == MACHINE_CHAR &&
+                    board[row][2] == MACHINE_CHAR) {
+                setBoard(row + " 0", MACHINE_CHAR);
+                return;
+            }
+        }
+        for (int col = 0; col < COLS; col++) {  // check cols
+            if (board[0][col] == MACHINE_CHAR &&
+                board[1][col] == MACHINE_CHAR &&
+                board[2][col] == defChar) {
+                setBoard("2 " + col, MACHINE_CHAR);
+                return;
+            }
+            else if (board[0][col] == MACHINE_CHAR &&
+                    board[1][col] == defChar &&
+                    board[2][col] == MACHINE_CHAR) {
+                setBoard("1 " + col, MACHINE_CHAR);
+                return;
+            }
+            else if (board[0][col] == defChar &&
+                    board[1][col] == MACHINE_CHAR &&
+                    board[2][col] == MACHINE_CHAR) {
+                setBoard("0 " + col, MACHINE_CHAR);
+                return;
+            }
+        }
+        if (board[0][0] == MACHINE_CHAR &&  // check first diagonal
+            board[1][1] == MACHINE_CHAR &&
+            board[2][2] == defChar) {
+            setBoard("2 2", MACHINE_CHAR);
+            return;
+        }
+        else if (board[0][0] == MACHINE_CHAR &&
+                board[1][1] == defChar &&
+                board[2][2] == MACHINE_CHAR) {
+            setBoard("1 1", MACHINE_CHAR);
+            return;
+        }
+        else if (board[0][0] == defChar &&
+                board[1][1] == MACHINE_CHAR &&
+                board[2][2] == MACHINE_CHAR) {
+            setBoard("0 0", MACHINE_CHAR);
+            return;
+        }
+        if (board[0][2] == MACHINE_CHAR &&  // check second diagonal
+            board[1][1] == MACHINE_CHAR &&
+            board[2][0] == defChar) {
+            setBoard("2 0", MACHINE_CHAR);
+            return;
+        }
+        else if (board[0][2] == MACHINE_CHAR &&
+                board[1][1] == defChar &&
+                board[2][0] == MACHINE_CHAR) {
+            setBoard("1 1", MACHINE_CHAR);
+            return;
+        }
+        else if (board[0][2] == defChar &&
+                board[1][1] == MACHINE_CHAR &&
+                board[2][0] == MACHINE_CHAR) {
+            setBoard("0 2", MACHINE_CHAR);
+            return;
+        }
     }
+
+    // 2. check for blocking move
+
+    // 3. check for center move
+    // 4. check for corner move
+    // 5. check for side move
 
     // method to inquire if a cell is open
     public boolean isCellOpen(String move){

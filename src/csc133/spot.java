@@ -11,4 +11,5 @@ public class spot {
     public static final char defChar = '-';
     public static final char MACHINE_CHAR = 'x';
     public static final char PLAYER_CHAR = 'o';
+    public static final int SPLINE_MOVES = 5;
 }

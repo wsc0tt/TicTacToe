@@ -139,182 +139,198 @@ public class slTTTBoard {
             }
         }
         else {
-            splineWinningMove();
-            splineBlockingMove();
-            splineCenterMove();
-            splineCornerMove();
-            splineSideMove();
+            String move = bestSplineMove();
+            if (move.equals("error")) {
+                playRandom();
+            }
+            else {
+                setBoard(move, MACHINE_CHAR);
+            }
         }
     }
 
+    public String bestSplineMove() {
+        String[] splineMoves = {
+                splineWinningMove(),
+                splineBlockingMove(),
+                splineCenterMove(),
+                splineSideMove(),
+                splineCornerMove()
+        };
+        for (String move : splineMoves) {
+            if (!move.equals("next")) {
+                return move;
+            }
+        }
+        return "error";
+    }
     // 1. check for winning move
-    public void splineWinningMove() {
+    public String splineWinningMove() {
         for (int row = 0; row < ROWS; row++) {  // check rows
             if (board[row][0] == MACHINE_CHAR &&
                 board[row][1] == MACHINE_CHAR &&
                 board[row][2] == defChar) {
-                setBoard(row + " 2", MACHINE_CHAR);
-                return;
+                return row + " 2";
             }
             else if (board[row][0] == MACHINE_CHAR &&
                     board[row][1] == defChar &&
                     board[row][2] == MACHINE_CHAR) {
-                setBoard(row + " 1", MACHINE_CHAR);
-                return;
+                return row + " 1";
             }
             else if (board[row][0] == defChar &&
                     board[row][1] == MACHINE_CHAR &&
                     board[row][2] == MACHINE_CHAR) {
-                setBoard(row + " 0", MACHINE_CHAR);
-                return;
+                return row + " 0";
             }
         }
         for (int col = 0; col < COLS; col++) {  // check cols
             if (board[0][col] == MACHINE_CHAR &&
                 board[1][col] == MACHINE_CHAR &&
                 board[2][col] == defChar) {
-                setBoard("2 " + col, MACHINE_CHAR);
-                return;
+                return "2 " + col;
             }
             else if (board[0][col] == MACHINE_CHAR &&
                     board[1][col] == defChar &&
                     board[2][col] == MACHINE_CHAR) {
-                setBoard("1 " + col, MACHINE_CHAR);
-                return;
+                return "1 " + col;
             }
             else if (board[0][col] == defChar &&
                     board[1][col] == MACHINE_CHAR &&
                     board[2][col] == MACHINE_CHAR) {
-                setBoard("0 " + col, MACHINE_CHAR);
-                return;
+                return "0 " + col;
             }
         }
         if (board[0][0] == MACHINE_CHAR &&  // check first diagonal
             board[1][1] == MACHINE_CHAR &&
             board[2][2] == defChar) {
-            setBoard("2 2", MACHINE_CHAR);
-            return;
+            return "2 2";
         }
         else if (board[0][0] == MACHINE_CHAR &&
                 board[1][1] == defChar &&
                 board[2][2] == MACHINE_CHAR) {
-            setBoard("1 1", MACHINE_CHAR);
-            return;
+            return "1 1";
         }
         else if (board[0][0] == defChar &&
                 board[1][1] == MACHINE_CHAR &&
                 board[2][2] == MACHINE_CHAR) {
-            setBoard("0 0", MACHINE_CHAR);
-            return;
+            return "0 0";
         }
         if (board[0][2] == MACHINE_CHAR &&  // check second diagonal
             board[1][1] == MACHINE_CHAR &&
             board[2][0] == defChar) {
-            setBoard("2 0", MACHINE_CHAR);
-            return;
+            return "2 0";
         }
         else if (board[0][2] == MACHINE_CHAR &&
                 board[1][1] == defChar &&
                 board[2][0] == MACHINE_CHAR) {
-            setBoard("1 1", MACHINE_CHAR);
-            return;
+            return "1 1";
         }
         else if (board[0][2] == defChar &&
                 board[1][1] == MACHINE_CHAR &&
                 board[2][0] == MACHINE_CHAR) {
-            setBoard("0 2", MACHINE_CHAR);
-            return;
+            return "0 2";
         }
+        return "next";
     }
 
     // 2. check for blocking move
-    public void splineBlockingMove() {
+    public String splineBlockingMove() {
         for (int row = 0; row < ROWS; row++) {  // check rows
             if (board[row][0] == PLAYER_CHAR &&
                     board[row][1] == PLAYER_CHAR &&
                     board[row][2] == defChar) {
-                setBoard(row + " 2", MACHINE_CHAR);
-                return;
+                return row + " 2";
             } else if (board[row][0] == PLAYER_CHAR &&
                     board[row][1] == defChar &&
                     board[row][2] == PLAYER_CHAR) {
-                setBoard(row + " 1", MACHINE_CHAR);
-                return;
+                return row + " 1";
             } else if (board[row][0] == defChar &&
                     board[row][1] == PLAYER_CHAR &&
                     board[row][2] == PLAYER_CHAR) {
-                setBoard(row + " 0", MACHINE_CHAR);
-                return;
+                return row + " 0";
             }
         }
         for (int col = 0; col < COLS; col++) {  // check cols
             if (board[0][col] == PLAYER_CHAR &&
                     board[1][col] == PLAYER_CHAR &&
                     board[2][col] == defChar) {
-                setBoard("2 " + col, MACHINE_CHAR);
-                return;
+                return "2 " + col;
             } else if (board[0][col] == PLAYER_CHAR &&
                     board[1][col] == defChar &&
                     board[2][col] == PLAYER_CHAR) {
-                setBoard("1 " + col, MACHINE_CHAR);
-                return;
+                return "1 " + col;
             } else if (board[0][col] == defChar &&
                     board[1][col] == PLAYER_CHAR &&
                     board[2][col] == PLAYER_CHAR) {
-                setBoard("0 " + col, MACHINE_CHAR);
-                return;
+                return "0 " + col;
             }
         }
         if (board[0][0] == PLAYER_CHAR &&  // check first diagonal
                 board[1][1] == PLAYER_CHAR &&
                 board[2][2] == defChar) {
-            setBoard("2 2", MACHINE_CHAR);
-            return;
+            return "2 2";
         } else if (board[0][0] == PLAYER_CHAR &&
                 board[1][1] == defChar &&
                 board[2][2] == PLAYER_CHAR) {
-            setBoard("1 1", MACHINE_CHAR);
-            return;
+            return "1 1";
         } else if (board[0][0] == defChar &&
                 board[1][1] == PLAYER_CHAR &&
                 board[2][2] == PLAYER_CHAR) {
-            setBoard("0 0", MACHINE_CHAR);
+                return "0 0";
         }
+        return "next";
     }
     // 3. check for center move
-    public void splineCenterMove() {
+    public String splineCenterMove() {
         if (board[1][1] == defChar) {
-            setBoard("1 1", MACHINE_CHAR);
+            return "1 1";
         }
+        return "next";
     }
     // 4. check for corner move
-    public void splineCornerMove() {
+    public String splineCornerMove() {
+        List<String> possibleMoves = new ArrayList<>();
         if (board[0][0] == defChar) {
-            setBoard("0 0", MACHINE_CHAR);
+            possibleMoves.add("0 0");
         }
-        else if (board[0][2] == defChar) {
-            setBoard("0 2", MACHINE_CHAR);
+        if (board[0][2] == defChar) {
+            possibleMoves.add("0 2");
         }
-        else if (board[2][0] == defChar) {
-            setBoard("2 0", MACHINE_CHAR);
+        if (board[2][0] == defChar) {
+            possibleMoves.add("2 0");
         }
-        else if (board[2][2] == defChar) {
-            setBoard("2 2", MACHINE_CHAR);
+        if (board[2][2] == defChar) {
+            possibleMoves.add("2 2");
+        }
+        if (possibleMoves.isEmpty()) {
+            return "next";
+        }
+        else {
+            Random rand = new Random();
+            return possibleMoves.get(rand.nextInt(possibleMoves.size()));
         }
     }
     // 5. check for side move
-    public void splineSideMove() {
+    public String splineSideMove() {
+        List<String> possibleMoves = new ArrayList<>();
         if (board[0][1] == defChar) {
-            setBoard("0 1", MACHINE_CHAR);
+            possibleMoves.add("0 1");
         }
-        else if (board[1][0] == defChar) {
-            setBoard("1 0", MACHINE_CHAR);
+        if (board[1][0] == defChar) {
+            possibleMoves.add("1 0");
         }
-        else if (board[1][2] == defChar) {
-            setBoard("1 2", MACHINE_CHAR);
+        if (board[1][2] == defChar) {
+            possibleMoves.add("1 2");
         }
-        else if (board[2][1] == defChar) {
-            setBoard("2 1", MACHINE_CHAR);
+        if (board[2][1] == defChar) {
+            possibleMoves.add("2 1");
+        }
+        if (possibleMoves.isEmpty()) {
+            return "next";
+        }
+        else {
+            Random rand = new Random();
+            return possibleMoves.get(rand.nextInt(possibleMoves.size()));
         }
     }
 
@@ -391,9 +407,16 @@ public class slTTTBoard {
     public int play() {
         String move = "";               // init empty string to store the current move
         while (!move.equals("quit")) {  // while the move is not equal to quit; loop this
-            prompt();                   // ask the user for move
-            move = getMove();           // save the move
-            if (!move.equals("error") && !move.equals("quit")) {    // if the move is not an error or quit
+            prompt();// ask the user for move
+            move = getMove();
+            while (move.equals("error")) {
+                prompt();
+                move = getMove();
+            }
+            if (move.equals("quit")) {
+                return GAME_QUIT;
+            }
+            else {    // if the move is not an error or quit
                 if (isCellOpen(move)){
                     setBoard(move, PLAYER_CHAR);     // if the cell is open, mark the board
                     lastMove = PLAYER_CHAR;          // set the last move to the player
@@ -401,7 +424,7 @@ public class slTTTBoard {
                 else {
                     System.out.println("cell has already been marked - try a different cell");
                 }
-                printBoard();
+                //printBoard();
             }
 
             // if there is a 3 in a row, end game
@@ -413,7 +436,7 @@ public class slTTTBoard {
                 return DRAW;
             }
             else {
-                playRandom();   // machine plays a random move
+                playSpline();   // machine plays a random move
                 printBoard();
                 if (check3InARow()) {
                     return MACHINE_WIN;

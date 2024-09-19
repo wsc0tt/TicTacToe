@@ -278,6 +278,19 @@ public class slTTTBoard {
                 board[2][2] == PLAYER_CHAR) {
                 return "0 0";
         }
+        if (board[0][2] == PLAYER_CHAR &&  // check second diagonal
+                board[1][1] == PLAYER_CHAR &&
+                board[2][0] == defChar) {
+            return "2 0";
+        } else if (board[0][2] == PLAYER_CHAR &&
+                board[1][1] == defChar &&
+                board[2][0] == PLAYER_CHAR) {
+            return "1 1";
+        } else if (board[0][2] == defChar &&
+                board[1][1] == PLAYER_CHAR &&
+                board[2][0] == PLAYER_CHAR) {
+            return "0 2";
+        }
         return "next";
     }
     // 3. check for center move
@@ -422,7 +435,12 @@ public class slTTTBoard {
                     lastMove = PLAYER_CHAR;          // set the last move to the player
                 }
                 else {
-                    System.out.println("cell has already been marked - try a different cell");
+                    while (!isCellOpen(move)) {
+                        System.out.println("cell has already been marked - try a different cell");
+                        prompt();
+                        move = getMove();
+                    }
+                    setBoard(move, PLAYER_CHAR);
                 }
                 //printBoard();
             }

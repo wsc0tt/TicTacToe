@@ -1,7 +1,8 @@
 /**
  * @author William Scott
- * @project Assignment 1 - Tic Tac Toe
+ * @project Assignment 2 - Tic Tac Toe
  * @course CSC 133 - Section 9
+ * Backend mechanics for the Tic Tac Toe game
  */
 
 package mechanicsBE;
@@ -20,10 +21,10 @@ public class slTTTBoard {
             {defChar, defChar, defChar}
     };
     
-    private ArrayList<Integer> openCellsArray;
+    private ArrayList<Integer> openCellsArray;  // array to keep track of open cells
     
     public slTTTBoard() {
-        openCellsArray = new ArrayList<>();
+        openCellsArray = new ArrayList<>(); // init the open cells array
         for (int i = 0; i < 9; i++) {
             openCellsArray.add(i);
         }
@@ -63,10 +64,10 @@ public class slTTTBoard {
         int row = move.charAt(0) - '0';   // subtract the character 0 to offset char to correct int values
         int col = move.charAt(2) - '0';
         board[row][col] = team;         // set the board to the team char
-        updateBoardArray(move);
+        updateBoardArray(move);       // update the open cells array
     }
     
-    public void updateBoardArray(String move) {
+    public void updateBoardArray(String move) { // update the open cells array
         int cell = switch (move) {
             case "0 0" -> 0;
             case "0 1" -> 1;
@@ -79,9 +80,10 @@ public class slTTTBoard {
             case "2 2" -> 8;
             default -> 9;
         };
-        openCellsArray.remove(Integer.valueOf(cell));
+        openCellsArray.remove(Integer.valueOf(cell)); // remove the cell from the open cells array
     }
 
+    // method to reset the board
     public void resetBoard() {
         for (int i = 0; i < ROWS; i++) {
             for (int j = 0; j < COLS; j++) {
@@ -95,6 +97,7 @@ public class slTTTBoard {
         moveCount = 0;
     }
 
+    // method to play a random move
     public void playRandom() {
         Random rand = new Random();
         int row = rand.nextInt(3);
@@ -109,11 +112,12 @@ public class slTTTBoard {
         }
     }
 
+    // method to play a spline move (machine wins)
     public void playSpline() {
-        if (moveCount == 0) {
+        if (moveCount == 0) {   // if the move count is 0, play the center
             setBoard("0 0", MACHINE_CHAR);
         }
-        else if (moveCount == 1) {
+        else if (moveCount == 1) {  // if the move count is 1, play the center or top left corner
             if (board[1][1] == PLAYER_CHAR) {
                 setBoard("0 0", MACHINE_CHAR);
             }
@@ -121,7 +125,7 @@ public class slTTTBoard {
                 setBoard("1 1", MACHINE_CHAR);
             }
         }
-        else if (moveCount == 2) {
+        else if (moveCount == 2) {  // if the move count is 2, play the opposite corner
             if (board[0][0] == PLAYER_CHAR) {
                 setBoard("2 2", MACHINE_CHAR);
             }
@@ -138,10 +142,10 @@ public class slTTTBoard {
                 setBoard("0 1", MACHINE_CHAR);
             }
         }
-        else {
+        else {  // if the move count is greater than 2, play the best move
             String move = bestSplineMove();
             if (move.equals("error")) {
-                playRandom();
+                playRandom();   // if there is an error retrieving a move, play a random move
             }
             else {
                 setBoard(move, MACHINE_CHAR);
@@ -149,6 +153,7 @@ public class slTTTBoard {
         }
     }
 
+    // method to determine the best move for the machine
     public String bestSplineMove() {
         String[] splineMoves = {
                 splineWinningMove(),
@@ -159,7 +164,7 @@ public class slTTTBoard {
         };
         for (String move : splineMoves) {
             if (!move.equals("next")) {
-                return move;
+                return move;    // return the first move available in array
             }
         }
         return "error";
